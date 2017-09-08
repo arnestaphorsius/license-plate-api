@@ -24,7 +24,10 @@ func main() {
 	i, err := strconv.Atoi(os.Args[1])
 
 	if err != nil {
-		log.Fatalf("error reading argument from cmd: %s", err.Error())
+		log.Printf("error reading argument from cmd: %s", err.Error())
+	} else {
+		// select the specified pin
+		pin = rpio.Pin(i)
 	}
 
 	// open memory range for GPIO access in /dev/mem
@@ -33,9 +36,6 @@ func main() {
 	}
 	// unmap GPIO memory when done
 	defer rpio.Close()
-
-	// select the pin specified
-	pin = rpio.Pin(i)
 
 	router := chi.NewRouter()
 	router.HandleFunc("/toggle", toggleGate)
