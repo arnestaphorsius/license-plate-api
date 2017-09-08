@@ -1,6 +1,8 @@
-hash: f866da996e18faffcf58c1a59d25a1da6de41f443941fb17971bf74fcdbaf870
-updated: 2017-09-08T11:23:42.110134905+02:00
+hash: 6fa01889057c30c246a072b47b722b5a7d2ee2a5d04d880db6e3d8cfbe5298c9
+updated: 2017-09-08T12:51:28.113972654+02:00
 imports:
+- name: github.com/dgrijalva/jwt-go
+  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
 - name: github.com/go-chi/chi
   version: 04ec7fc4179604b2390947258f9143eaae23b596
 - name: github.com/go-chi/render
