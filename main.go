@@ -15,8 +15,9 @@ import (
 )
 
 var (
-	port int      = 8080
-	pin  rpio.Pin = rpio.Pin(4)
+	port       = 8080
+	pin        = rpio.Pin(4)
+	hmacSecret = []byte("my_secret_keyy")
 )
 
 func main() {
@@ -41,25 +42,23 @@ func main() {
 	router.HandleFunc("/toggle", toggleGate)
 	router.HandleFunc("/validate", validateJWT)
 
-	log.Printf("starting service listening  on port [%s]", port)
+	fmt.Printf("starting service listening  on port [%d]", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
 func valid(req *http.Request) bool {
-	result := false
 	headToken := req.Header.Get("Authorization")
 	var tokenString string
 
 	if strings.Contains(headToken, "Bearer ") {
-		tokenString = headToken[7:len(headToken)]
+		tokenString = headToken[7:]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// Don't forget to validate the alg is what you expect:
+			// Only accept HMAC
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 			}
 
-			// hmacSampleSecret is a []byte containing your secret, e.g. []byte("my_secret_key")
-			return []byte("my_secret_keyy"), nil
+			return hmacSecret, nil
 		})
 
 		fmt.Println(err)
@@ -71,7 +70,7 @@ func valid(req *http.Request) bool {
 			}
 		}
 	}
-	return result
+	return false
 }
 
 func validateJWT(w http.ResponseWriter, req *http.Request) {
