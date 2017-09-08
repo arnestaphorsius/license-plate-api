@@ -6,19 +6,23 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
+	"github.com/go-chi/jwtauth"
 	"github.com/stianeikeland/go-rpio"
 )
 
 var (
-	port       = 8080
-	pin        = rpio.Pin(4)
-	hmacSecret = []byte("my_secret_keyy")
+	port = 8080
+	pin  = rpio.Pin(4)
 )
+
+var tokenAuth *jwtauth.JwtAuth
+
+func init() {
+	tokenAuth = jwtauth.New("HS256", []byte("my_secret_keyy"), nil)
+}
 
 func main() {
 	// read the preferred pin number from the commandline
@@ -39,47 +43,28 @@ func main() {
 	defer rpio.Close()
 
 	router := chi.NewRouter()
+
+	// Protected routes
+	router.Group(func(r chi.Router) {
+		// Seek, verify and validate JWT tokens
+		r.Use(jwtauth.Verifier(tokenAuth))
+
+		// Handle valid / invalid tokens. In this example, we use
+		// the provided authenticator middleware, but you can write your
+		// own very easily, look at the Authenticator method in jwtauth.go
+		// and tweak it, its not scary.
+		r.Use(jwtauth.Authenticator)
+
+		r.Get("/validate", func(w http.ResponseWriter, r *http.Request) {
+			_, claims, _ := jwtauth.FromContext(r.Context())
+			w.Write([]byte(fmt.Sprintf("protected area. hi %v", claims["beam"])))
+		})
+	})
+
 	router.HandleFunc("/toggle", toggleGate)
-	router.HandleFunc("/validate", validateJWT)
 
 	fmt.Printf("starting service listening  on port [%d]", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
-}
-
-func valid(req *http.Request) bool {
-	headToken := req.Header.Get("Authorization")
-	var tokenString string
-
-	if strings.Contains(headToken, "Bearer ") {
-		tokenString = headToken[7:]
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// Only accept HMAC
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
-			}
-
-			return hmacSecret, nil
-		})
-
-		fmt.Println(err)
-
-		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			beam, _ := claims["beam"].(string)
-			if beam == "yes" {
-				return true
-			}
-		}
-	}
-	return false
-}
-
-func validateJWT(w http.ResponseWriter, req *http.Request) {
-	if valid(req) {
-		w.Write([]byte("Proceed"))
-	} else {
-		w.WriteHeader(401)
-		w.Write([]byte("Please authenticate"))
-	}
 }
 
 func toggleGate(w http.ResponseWriter, req *http.Request) {

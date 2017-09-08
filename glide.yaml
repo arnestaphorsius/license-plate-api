@@ -6,5 +6,12 @@ import:
   version: ^3.2.1
 - package: github.com/go-chi/render
   version: ^1.0.0
+  # TODO: See https://github.com/dgrijalva/jwt-go/issues/221
+  # version = "^v3.0.0"
 - package: github.com/dgrijalva/jwt-go
-  version: v3.0.0
+  version: a539ee1a749a2b895533f979515ac7e6e0f5b650
+  # TODO: See https://github.com/go-chi/jwtauth/commit/6075ccf8678cf2c941c7e816937c8ebf93a0b25f
+  # version: "^3.0.1"
+- package: github.com/go-chi/jwtauth
+  version: e701090bf80b87b3f81b27edf0559ab044b11181
+

@@ -1,10 +1,12 @@
-hash: 6fa01889057c30c246a072b47b722b5a7d2ee2a5d04d880db6e3d8cfbe5298c9
-updated: 2017-09-08T12:51:28.113972654+02:00
+hash: 6d14f86dd70e6e91f5422892261aa84d48dcc6891d5776f6b3dca178f33aac8b
+updated: 2017-09-08T14:40:08.223193049+02:00
 imports:
 - name: github.com/dgrijalva/jwt-go
-  version: d2709f9f1f31ebcda9651b03077758c1f3a0018c
+  version: a539ee1a749a2b895533f979515ac7e6e0f5b650
 - name: github.com/go-chi/chi
   version: 04ec7fc4179604b2390947258f9143eaae23b596
+- name: github.com/go-chi/jwtauth
+  version: e701090bf80b87b3f81b27edf0559ab044b11181
 - name: github.com/go-chi/render
   version: 9f855fadd4b8cde7773f9ef51f6b2705af239519
 - name: github.com/stianeikeland/go-rpio
