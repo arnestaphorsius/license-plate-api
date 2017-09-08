@@ -41,7 +41,7 @@ func main() {
 	router.HandleFunc("/toggle", toggleGate)
 	router.HandleFunc("/validate", validateJWT)
 
-	fmt.Printf("starting service listening  on port [%s]", port)
+	log.Printf("starting service listening  on port [%s]", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
