@@ -13,13 +13,13 @@ import (
 )
 
 var (
-	pin rpio.Pin
+	port int = 8080
+	pin  rpio.Pin
 )
 
 func main() {
 
-	fmt.Printf(os.Args[1])
-
+	// read the preferred pin number from the commandline
 	i, err := strconv.Atoi(os.Args[1])
 
 	if err != nil {
@@ -33,13 +33,14 @@ func main() {
 	// unmap GPIO memory when done
 	defer rpio.Close()
 
-	// select the pin specified as cli argument
+	// select the pin specified
 	pin = rpio.Pin(i)
 
 	router := chi.NewRouter()
 	router.HandleFunc("/toggle", toggleGate)
 
-	http.ListenAndServe(":8080", router)
+	fmt.Printf("starting service listening  on port [%s]", port)
+	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
 
 func toggleGate(w http.ResponseWriter, req *http.Request) {
