@@ -1,6 +1,10 @@
-hash: 76cc6100c4fa770d9b22583e636e68c143f121dcc56019e80f2e271296de2c86
-updated: 2017-09-08T11:08:13.83308109+02:00
+hash: f866da996e18faffcf58c1a59d25a1da6de41f443941fb17971bf74fcdbaf870
+updated: 2017-09-08T11:23:42.110134905+02:00
 imports:
+- name: github.com/go-chi/chi
+  version: 04ec7fc4179604b2390947258f9143eaae23b596
+- name: github.com/go-chi/render
+  version: 9f855fadd4b8cde7773f9ef51f6b2705af239519
 - name: github.com/stianeikeland/go-rpio
   version: 896db2ee1c7f95240dd6a09e56edf9cece107a34
 testImports: []

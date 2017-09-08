@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/stianeikeland/go-rpio"
@@ -33,6 +32,7 @@ func main() {
 	// unmap gpio memory when done
 	defer rpio.Close()
 
+	// select the pin specified as cli argument
 	pin = rpio.Pin(i)
 
 	router := chi.NewRouter()
@@ -42,13 +42,9 @@ func main() {
 }
 
 func toggleGate(w http.ResponseWriter, req *http.Request) {
-
 	// Set pin to output mode
 	pin.Output()
 
-	// Toggle pin 20 times
-	for x := 0; x < 20; x++ {
-		pin.Toggle()
-		time.Sleep(time.Second / 5)
-	}
+	// Toggle the pin on the Raspberry Pi
+	pin.Toggle()
 }
