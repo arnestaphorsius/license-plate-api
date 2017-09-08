@@ -2,3 +2,7 @@ package: github.com/arnestaphorsius/license-plate-api
 import:
 - package: github.com/stianeikeland/go-rpio
   version: v3.0.0
+- package: github.com/go-chi/chi
+  version: ^3.2.1
+- package: github.com/go-chi/render
+  version: ^1.0.0

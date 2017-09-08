@@ -2,11 +2,17 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"strconv"
 	"time"
 
+	"github.com/go-chi/chi"
 	"github.com/stianeikeland/go-rpio"
+)
+
+var (
+	pin rpio.Pin
 )
 
 func main() {
@@ -20,9 +26,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	var (
-		pin = rpio.Pin(i)
-	)
+	pin = rpio.Pin(i)
+
+	router := chi.NewRouter()
+	router.HandleFunc("/toggle", toggleGate)
+
+	http.ListenAndServe(":8080", router)
+}
+
+func toggleGate(w http.ResponseWriter, req *http.Request) {
 
 	if err := rpio.Open(); err != nil {
 		fmt.Println(err)
