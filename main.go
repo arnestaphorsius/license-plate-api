@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/stianeikeland/go-rpio"
@@ -45,6 +46,12 @@ func toggleGate(w http.ResponseWriter, req *http.Request) {
 	// Set pin to output mode
 	pin.Output()
 
-	// Toggle the pin on the Raspberry Pi
-	pin.Toggle()
+	// Set the pin to High to manually open the gate.
+	pin.High()
+
+	// Wait three seconds to give the gate some time to adjust.
+	time.Sleep(time.Second * 3)
+
+	// Set the pin to Low to put the gate back in it's normal operating mode.
+	pin.Low()
 }
