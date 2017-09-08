@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -22,9 +23,15 @@ func main() {
 	i, err := strconv.Atoi(os.Args[1])
 
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatalf("error reading argument from cmd: %s", err.Error())
 	}
+
+	// open memory range for GPIO access in /dev/mem
+	if err := rpio.Open(); err != nil {
+		log.Fatalf("error opening memory range: %s", err.Error())
+	}
+	// unmap gpio memory when done
+	defer rpio.Close()
 
 	pin = rpio.Pin(i)
 
@@ -35,14 +42,6 @@ func main() {
 }
 
 func toggleGate(w http.ResponseWriter, req *http.Request) {
-
-	if err := rpio.Open(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	// Unmap gpio memory when done
-	defer rpio.Close()
 
 	// Set pin to output mode
 	pin.Output()
