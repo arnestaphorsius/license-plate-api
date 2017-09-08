@@ -30,7 +30,7 @@ func main() {
 	if err := rpio.Open(); err != nil {
 		log.Fatalf("error opening memory range: %s", err.Error())
 	}
-	// unmap gpio memory when done
+	// unmap GPIO memory when done
 	defer rpio.Close()
 
 	// select the pin specified as cli argument
@@ -43,15 +43,18 @@ func main() {
 }
 
 func toggleGate(w http.ResponseWriter, req *http.Request) {
-	// Set pin to output mode
-	pin.Output()
 
-	// Set the pin to High to manually open the gate.
-	pin.High()
+	go func() {
+		// Set pin to output mode
+		pin.Output()
 
-	// Wait three seconds to give the gate some time to adjust.
-	time.Sleep(time.Second * 3)
+		// Set the pin to High to manually open the gate.
+		pin.High()
 
-	// Set the pin to Low to put the gate back in it's normal operating mode.
-	pin.Low()
+		// Wait three seconds to give the gate some time to adjust.
+		time.Sleep(time.Second * 3)
+
+		// Set the pin to Low to put the gate back in it's normal operating mode.
+		pin.Low()
+	}()
 }
