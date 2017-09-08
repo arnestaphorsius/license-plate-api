@@ -14,7 +14,7 @@ import (
 
 var (
 	port int      = 8080
-	pin  rpio.Pin = 4
+	pin  rpio.Pin = rpio.Pin(4)
 )
 
 func main() {
