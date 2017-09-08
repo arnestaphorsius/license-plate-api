@@ -13,12 +13,11 @@ import (
 )
 
 var (
-	port int = 8080
-	pin  rpio.Pin
+	port int      = 8080
+	pin  rpio.Pin = 4
 )
 
 func main() {
-
 	// read the preferred pin number from the commandline
 	i, err := strconv.Atoi(os.Args[1])
 
